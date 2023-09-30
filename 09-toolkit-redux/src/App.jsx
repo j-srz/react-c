@@ -30,7 +30,7 @@ function App() {
       <h1>Vite + React</h1>
       <h2>Count is {counter}</h2>
       <div className="card">
-        <button onClick={() => {dispatch( increment(1) )}}>
+        <button onClick={() => {dispatch( increment() )}}>
          Increment 
         </button>
         <button onClick={() => {dispatch( decrement() )}}>
