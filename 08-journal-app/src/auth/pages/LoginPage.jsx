@@ -10,6 +10,11 @@ import { AuthLayout } from "../layout/AuthLayout";
 import { useMemo } from "react";
 
 
+const formData = {
+  email: 'jesus@correo.com',
+  password: '123456'
+}
+
 export const LoginPage = () => {
 
 
@@ -18,10 +23,9 @@ export const LoginPage = () => {
 
   const { status, errorMessage } = useSelector(state => state.auth);
 
-  const { email, password, onInputChange } = useForm({
-    email: 'jesus@correo.com',
-    password: '123456'
-  });
+
+
+  const { email, password, onInputChange } = useForm(formData);
 
   const isAuthenticating = useMemo( () => status === 'checking', [status] )
 
@@ -31,8 +35,7 @@ export const LoginPage = () => {
 
     dispatch( startLoginWithEmailPassword({ email, password }) );
 
-    console.log({email, password});
-  }
+   }
 
   const onGoogleSignIn = () => {
 
