@@ -11,8 +11,8 @@ import { useMemo } from "react";
 
 
 const formData = {
-  email: 'jesus@correo.com',
-  password: '123456'
+  email: '',
+  password: ''
 }
 
 export const LoginPage = () => {
@@ -41,7 +41,6 @@ export const LoginPage = () => {
 
     dispatch( startGoogleSingIn() );
 
-    console.log({email, password});
     
   }
 

@@ -104,8 +104,8 @@ export const startDeletingNote = () => {
         const { active:note } = getState().journal;
 
         const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${ note.id }`);
-        const resp = await deleteDoc( docRef );
+        await deleteDoc( docRef );
 
-        dispatch( deleteNoteById(note.id));
+        dispatch( deleteNoteById(note.id) );
     }
 }
