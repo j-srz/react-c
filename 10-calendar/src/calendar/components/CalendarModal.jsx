@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -8,6 +8,7 @@ import es from 'date-fns/locale/es';
 import "sweetalert2/dist/sweetalert2.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 
+import { useCalendarStore, useUiStore } from "../../hooks";
 
 registerLocale('es', es)
 
@@ -26,15 +27,16 @@ Modal.setAppElement("#root");
 
 export const CalendarModal = () => {
 
-  const [isOpenModal, setIsOpenModal] = useState(true);
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const { activeEvent, startSavingEvent, resetActiveEvent } = useCalendarStore();
+
+  const [ formSubmitted, setFormSubmitted ] = useState(false);
+  const { isDateModalOpen, closeDateModal } = useUiStore();
 
   const [formValues, setFormValues] = useState({
-    title: 'text-title',
-    notes: 'text-notes',
+    title: '',
+    notes: '',
     start: new Date(),
     end: addHours( new Date(), 2 ),
-
   })
 
 
@@ -47,6 +49,17 @@ export const CalendarModal = () => {
 
 
   }, [formValues.title, formValues])
+
+
+  useEffect(() => {
+    if ( activeEvent !== null ) {
+      setFormValues({...activeEvent})
+    }
+    
+  }, [ activeEvent ])
+  
+
+
 
   const onInputChanged = ( { target } ) => {
     setFormValues({
@@ -64,12 +77,12 @@ export const CalendarModal = () => {
 
 
   const onCloseModal = () => {
-    console.log("cerrando modal");
-    setIsOpenModal(false);
+    closeDateModal()
+    resetActiveEvent()
   };
 
 
-  const onSubmit = ( event ) => {
+  const onSubmit =async ( event ) => {
     event.preventDefault();
     setFormSubmitted(true);
 
@@ -86,6 +99,9 @@ export const CalendarModal = () => {
 
 
     //TODO:
+    await startSavingEvent( formValues );
+    closeDateModal()
+    setFormSubmitted(false);
     // remover err en pantalla
     // cerrar el modal
 
@@ -95,7 +111,7 @@ export const CalendarModal = () => {
 
   return (
     <Modal
-      isOpen={isOpenModal}
+      isOpen={isDateModalOpen}
       onRequestClose={onCloseModal}
       style={customStyles}
       contentLabel="Example Modal"
